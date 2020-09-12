@@ -34,12 +34,13 @@ if __name__ == '__main__':
     q_target.eval()
     agent = DQN_agent(env, device, MB, q_net, q_target, n_episodes, T, 
                           gamma, e_start, e_end, e_decay, target_update, batch_size)
+    plt.figure()
     losses = agent.train()
     plt.plot(np.arange(len(losses)), losses)
     plt.ylabel('loss')
     plt.xlabel('episodes')
     plt.title("Training")
-    
+    plt.savefig('DQN_training.png')
     
 
 
