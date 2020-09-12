@@ -7,6 +7,9 @@ from a2c_net import conv_net, MLP
 
 device = torch.device('cpu')
 hidden_dim = 128
+lr_a = 0.001
+lr_c = 0.001
+n_episodes = 1
 if __name__ == '__main__':
     # allows to access the envionment specific dynamics 
     env = gym.make('CartPole-v0').unwrapped
@@ -19,4 +22,6 @@ if __name__ == '__main__':
     init_screen = get_screen(env, device)
     actor = conv_net(init_screen.shape[2], init_screen.shape[3], env.action_space.n)
     critic = MLP(init_screen.shape[2], 1, hidden_dim)
+    agent = A2C_agent(n_episodes, env, device, actor, critic, lr_a, lr_c)
+    agent.train()
     

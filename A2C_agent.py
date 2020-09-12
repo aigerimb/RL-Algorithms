@@ -8,6 +8,7 @@ from PIL import Image
 import torchvision.transforms as T
 import math 
 import torch.optim as optim
+import torch.distributions as distributions
 
 def get_cart_location(screen_width, env):
     world_width = env.x_threshold * 2
@@ -46,17 +47,31 @@ resize = T.Compose([T.ToPILImage(),
 
 class A2C_agent(object):
     
-    def __init__(self, n_episodes, env, device):
+    def __init__(self, n_episodes, env, device, actor, critic, lr_a, lr_c):
         self.env = env 
         self.n_episodes = n_episodes 
         self.device = device 
-    #def act(self, state):
+        self.actor = actor
+        self.critic = critic 
+        self.lr_a = lr_a
+        self.lr_c = lr_c 
         
         
+    def act(self, state):
+        
+        probs = F.softmax(self.actor(state))
+        # Categorical distirbution takes p vector of probs
+        # that specify the probability for each category/action
+        m = distributions.Categorical(probs)
+        action = m.sample()
+        logprob = m.log_prob(action)
+        
+        return action, logprob 
+  
    # def learn(self):
         
 
-   # def train(self):
+    def train(self):
         env = self.env 
         device = self.device 
         for i in range(self.n_episodes):
@@ -68,13 +83,20 @@ class A2C_agent(object):
             state = current_screen - last_screen
             done = False 
             t = 0
+            logprobs = []
+            actions = []
+            rewards = []
             while done == False:
                 print("t: ", t)
-                action = self.act(state)
+                action, logprob = self.act(state)
+                v = self.critic(state)
                 # convert action tensor to python scalar and run env
                 _, reward, done, _ = env.step(action.item())
                 reward = torch.tensor([reward], device=device)
-
+                actions.append(action)
+                logprobs.append([logprob])
+                values.append([v])
+                rewards.append(reward)
                 last_screen = current_screen
                 current_screen = get_screen(env, device)
                 if not done:
@@ -83,8 +105,7 @@ class A2C_agent(object):
                     next_state = None
                 self.MB.add(state, action, next_state, reward)
                 state = next_state
-                # update weights of q_net
-                self.learn()
                 t+=1
+                
         
    # def test(self):
