@@ -1,7 +1,7 @@
 # RL Algorithms 
+This repository contains some of my implementations of well-known reinforcement learning algorithms. 
 
-
-## Algorithms:
+## Algorithms
 
 1. DQN 
 2. A2C
