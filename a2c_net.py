@@ -34,16 +34,3 @@ class conv_net(nn.Module):
         x = F.relu(self.bn3(self.conv3(x)))
         return self.head(x.view(x.size(0), -1))
     
-    
-class MLP(nn.Module):
-    
-    def __init__(self, input_size, output_size, hidden_dim):
-        super(MLP, self).__init__()
-        self.ff1 = nn.Linear(input_size, hidden_dim)
-        self.ff2 = nn.Linear(hidden_dim, output_size)
-        
-    def forward(self, x):
-        y = F.relu(self.ff1(x))
-        output = self.ff2(y)
-        
-        return output 
