@@ -2,8 +2,8 @@ import gym
 import numpy as np 
 import matplotlib.pyplot as plt
 import torch 
-from DQN_agent import DQN_agent, get_screen
-from DQN_net import MemoryBuffer, conv_net
+from agents.DQN_agent import DQN_agent, get_screen
+from neuralnets.DQN_net import MemoryBuffer, conv_net
 
 device = torch.device('cpu')
 mem_cap = 100000 

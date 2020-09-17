@@ -2,8 +2,8 @@ import gym
 import numpy as np 
 import matplotlib.pyplot as plt
 import torch 
-from A2C_agent import get_screen, A2C_agent
-from a2c_net import conv_net, MLP
+from agents.A2C_agent import get_screen, A2C_agent
+from neuralnets.a2c_net import conv_net
 
 device = torch.device('cpu')
 lr_a = 0.001
